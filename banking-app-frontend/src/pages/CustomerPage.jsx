@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { createCustomer } from '../api/customerApi';
+import { useNavigate } from 'react-router-dom';
+import './CustomerPage.css';
 
 const initialFormState = {
   name: '',
@@ -15,8 +17,10 @@ const initialFormState = {
 function CustomerPage() {
   const [formData, setFormData] = useState(initialFormState);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [generalError, setGeneralError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,18 +30,21 @@ function CustomerPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMessage('');
+    setFieldErrors({});
+    setGeneralError('');
     setSuccessMessage('');
 
     try {
       const response = await createCustomer(formData);
-      setSuccessMessage(`Customer created successfully. ID: ${response.customerId}`);
+      navigate('/customers/confirmation', { state: response });
       setFormData(initialFormState);
     } catch (error) {
-      if (error.response) {
-        setErrorMessage(error.response.data.message || 'Failed to create customer.');
+      if (error.response?.data?.fieldErrors) {
+        setFieldErrors(error.response.data.fieldErrors);
+      } else if (error.response) {
+        setGeneralError(error.response.data.message || 'Failed to register customer.');
       } else {
-        setErrorMessage('Could not reach the server. Please try again.');
+        setGeneralError('Could not reach the server. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -45,32 +52,75 @@ function CustomerPage() {
   };
 
   return (
-    <div>
-      <h2>Customer Registration</h2>
+    <div className="page-container">
+      <div className="form-card">
+        {generalError && <p className="general-error">{generalError}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
+        
+        <h1 className="form-title">Customer Registration</h1>
+        <p className="form-subtitle">Enter customer details to open a new profile</p>
 
-      <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} />
-        <input name="fatherName" placeholder="Father's Name" value={formData.fatherName} onChange={handleChange} />
-        <input name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
-        <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-        <input name="adharId" placeholder="Aadhar ID (12 digits)" value={formData.adharId} onChange={handleChange} />
-        <input name="phoneNo" placeholder="Phone Number" value={formData.phoneNo} onChange={handleChange} />
-        <input name="dob" type="date" value={formData.dob} onChange={handleChange} />
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="form-field">
+            <label htmlFor="name">Full Name</label>
+            <input id="name" name="name" value={formData.name} onChange={handleChange} />
+            {fieldErrors.name && <span className="field-error">{fieldErrors.name}</span>}
+          </div>
 
-        <select name="gender" value={formData.gender} onChange={handleChange}>
-          <option value="">Select Gender</option>
-          <option value="MALE">Male</option>
-          <option value="FEMALE">Female</option>
-          <option value="OTHER">Other</option>
-        </select>
+          <div className="form-field">
+            <label htmlFor="fatherName">Father's Name</label>
+            <input id="fatherName" name="fatherName" value={formData.fatherName} onChange={handleChange} />
+            {fieldErrors.fatherName && <span className="field-error">{fieldErrors.fatherName}</span>}
+          </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Submitting...' : 'Register Customer'}
-        </button>
-      </form>
+          <div className="form-field">
+            <label htmlFor="address">Address</label>
+            <input id="address" name="address" value={formData.address} onChange={handleChange} />
+            {fieldErrors.address && <span className="field-error">{fieldErrors.address}</span>}
+          </div>
 
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+          <div className="form-field">
+            <label htmlFor="email">Email</label>
+            <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} />
+            {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="adharId">Aadhar ID</label>
+            <input id="adharId" name="adharId" value={formData.adharId} onChange={handleChange} placeholder="12-digit number" />
+            {fieldErrors.adharId && <span className="field-error">{fieldErrors.adharId}</span>}
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="phoneNo">Phone Number</label>
+            <input id="phoneNo" name="phoneNo" value={formData.phoneNo} onChange={handleChange} placeholder="10-digit mobile number" />
+            {fieldErrors.phoneNo && <span className="field-error">{fieldErrors.phoneNo}</span>}
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="dob">Date of Birth</label>
+            <input id="dob" name="dob" type="date" value={formData.dob} onChange={handleChange} />
+            {fieldErrors.dob && <span className="field-error">{fieldErrors.dob}</span>}
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="gender">Gender</label>
+            <select id="gender" name="gender" value={formData.gender} onChange={handleChange}>
+              <option value="">Select gender</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
+            </select>
+            {fieldErrors.gender && <span className="field-error">{fieldErrors.gender}</span>}
+          </div>
+
+          <button type="submit" className="submit-button" disabled={loading}>
+            {loading ? 'Submitting...' : 'Register Customer'}
+          </button>
+
+          
+        </form>
+      </div>
     </div>
   );
 }
