@@ -3,6 +3,7 @@ import CustomerPage from './pages/CustomerPage';
 import AccountPage from './pages/AccountPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import LoginPage from './pages/LoginPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -11,7 +12,17 @@ function App() {
       <Route path="/customers/confirmation" element={<ConfirmationPage />} />
       <Route path="/accounts" element={<AccountPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/customers" element={
+  <ProtectedRoute><CustomerPage /></ProtectedRoute>
+} />
+<Route path="/customers/confirmation" element={
+  <ProtectedRoute><ConfirmationPage /></ProtectedRoute>
+} />
+<Route path="/accounts" element={
+  <ProtectedRoute><AccountPage /></ProtectedRoute>
+} />
     </Routes>
+    
   );
 }
 
