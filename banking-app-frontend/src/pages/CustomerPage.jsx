@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createCustomer } from '../api/customerApi';
 import { useNavigate } from 'react-router-dom';
-import './CustomerPage.css';
+import '../styles/shared.css';
 
 const initialFormState = {
   name: '',

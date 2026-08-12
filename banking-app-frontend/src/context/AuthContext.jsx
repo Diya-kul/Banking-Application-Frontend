@@ -1,9 +1,15 @@
 import { createContext, useState, useContext } from 'react';
+import { setAuthToken } from '../api/axiosInstance';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
+  const [token, setTokenState] = useState(null);
+
+  const setToken = (newToken) => {
+    setTokenState(newToken);
+    setAuthToken(newToken);
+  };
 
   const isAuthenticated = Boolean(token);
 
@@ -19,5 +25,9 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

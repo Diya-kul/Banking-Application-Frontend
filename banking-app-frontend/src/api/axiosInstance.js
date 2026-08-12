@@ -7,6 +7,19 @@ const axiosInstance = axios.create({
   },
 });
 
+let authToken = null;
+
+export const setAuthToken = (token) => {
+  authToken = token;
+};
+
+axiosInstance.interceptors.request.use((config) => {
+  if (authToken) {
+    config.headers.Authorization = `Bearer ${authToken}`;
+  }
+  return config;
+});
+
 export default axiosInstance;
 
 /*

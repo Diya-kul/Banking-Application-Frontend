@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import CustomerPage from './pages/CustomerPage';
 import AccountPage from './pages/AccountPage';
 import ConfirmationPage from './pages/ConfirmationPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Route path="/customers" element={<CustomerPage />} />
       <Route path="/customers/confirmation" element={<ConfirmationPage />} />
       <Route path="/accounts" element={<AccountPage />} />
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
   );
 }
