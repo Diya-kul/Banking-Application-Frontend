@@ -8,21 +8,21 @@ import ProtectedRoute from './components/ProtectedRoute';
 function App() {
   return (
     <Routes>
-      <Route path="/customers" element={<CustomerPage />} />
-      <Route path="/customers/confirmation" element={<ConfirmationPage />} />
-      <Route path="/accounts" element={<AccountPage />} />
       <Route path="/login" element={<LoginPage />} />
+
       <Route path="/customers" element={
-  <ProtectedRoute><CustomerPage /></ProtectedRoute>
-} />
-<Route path="/customers/confirmation" element={
-  <ProtectedRoute><ConfirmationPage /></ProtectedRoute>
-} />
-<Route path="/accounts" element={
-  <ProtectedRoute><AccountPage /></ProtectedRoute>
-} />
+        <ProtectedRoute><CustomerPage /></ProtectedRoute>
+      } />
+      <Route path="/customers/confirmation" element={
+        <ProtectedRoute><ConfirmationPage /></ProtectedRoute>
+      } />
+      <Route path="/accounts" element={
+        <ProtectedRoute><AccountPage /></ProtectedRoute>
+      } />
+      <Route path="/customers/:customerId/accounts/new" element={
+        <ProtectedRoute><AccountPage /></ProtectedRoute>
+      } />
     </Routes>
-    
   );
 }
 

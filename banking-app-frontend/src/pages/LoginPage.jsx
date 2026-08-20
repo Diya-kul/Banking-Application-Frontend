@@ -72,3 +72,6 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+// iske baad jo h Customer Dashboard pe render ho ge
+// dashboard se KYC verification then Account Page

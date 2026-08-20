@@ -49,7 +49,7 @@ function ConfirmationPage() {
 
         <div className="confirmation-actions">
           <button className="submit-button" onClick={() => navigate('/AccountPage')}>
-                Create Account
+                View Dashboard
           </button>
           <button className="secondary-button" onClick={() =>window.print()}>
                 Print
@@ -61,3 +61,4 @@ function ConfirmationPage() {
 }
 
 export default ConfirmationPage;
+// Render to create user credentials (userName & password) SIGN IN -> login

@@ -126,3 +126,5 @@ function CustomerPage() {
 }
 
 export default CustomerPage;
+
+// Render to Confirmation Page
