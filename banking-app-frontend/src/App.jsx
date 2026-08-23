@@ -5,6 +5,7 @@ import ConfirmationPage from './pages/ConfirmationPage';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectRoute';
 import DashboardPage from './pages/DashboardPage';
+import SetPasswordPage from './pages/SetPasswordPage';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/dashboard" element={
   <ProtectedRoute><DashboardPage /></ProtectedRoute>
 } />
+<Route path="/set-password" element={<SetPasswordPage />} />
     </Routes>
   );
 }

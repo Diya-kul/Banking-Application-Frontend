@@ -36,7 +36,7 @@ function CustomerPage() {
 
     try {
       const response = await createCustomer(formData);
-      navigate('/customers/confirmation', { state: response });
+      navigate('/set-password', { state: response });
       setFormData(initialFormState);
     } catch (error) {
       if (error.response?.data?.fieldErrors) {

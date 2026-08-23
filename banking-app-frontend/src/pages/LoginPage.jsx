@@ -42,28 +42,15 @@ function LoginPage() {
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-field">
             <label htmlFor="userName">Email</label>
-            <input
-              id="userName"
-              type="email"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
+            <input id="userName" type="email" value={userName} onChange={(e) => setUserName(e.target.value)} />
           </div>
-
           <div className="form-field">
             <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-
           <button type="submit" className="submit-button" disabled={loading}>
             {loading ? 'Signing in...' : 'Login'}
           </button>
-
           {errorMessage && <p className="general-error">{errorMessage}</p>}
         </form>
       </div>
@@ -72,6 +59,5 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
 // iske baad jo h Customer Dashboard pe render ho ge
 // dashboard se KYC verification then Account Page
