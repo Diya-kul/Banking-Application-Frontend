@@ -14,10 +14,10 @@ function DashboardPage() {
         <h1 className="form-title">Welcome</h1>
         <p className="form-subtitle">Logged in as {decoded?.sub}</p>
 
-        <div className="dashboard-actions">
-          <Link to="/customers" className="submit-button">Register New Customer</Link>
-          <button className="secondary-button" onClick={logout}>Logout</button>
-        </div>
+       <div className="dashboard-actions">
+  <Link to="/customers" className="submit-button">Register New Customer</Link>
+  <button className="secondary-button" onClick={logout}>Logout</button>
+</div>
       </div>
     </div>
   );

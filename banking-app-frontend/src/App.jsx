@@ -3,7 +3,8 @@ import CustomerPage from './pages/CustomerPage';
 import AccountPage from './pages/AccountPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import LoginPage from './pages/LoginPage';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/ProtectRoute';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
       <Route path="/customers/:customerId/accounts/new" element={
         <ProtectedRoute><AccountPage /></ProtectedRoute>
       } />
+      <Route path="/dashboard" element={
+  <ProtectedRoute><DashboardPage /></ProtectedRoute>
+} />
     </Routes>
   );
 }

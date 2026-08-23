@@ -21,7 +21,7 @@ function LoginPage() {
     try {
       const token = await login({ userName, password });
       setToken(token);
-      navigate('/customers');
+      navigate('/dashboard');
     } catch (error) {
       if (error.response) {
         setErrorMessage(error.response.data.message || 'Invalid email or password.');

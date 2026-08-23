@@ -106,7 +106,7 @@ function AccountPage() {
         </form>
       </div>
     </div>
-  );
+ );
 }
 
 export default AccountPage;

@@ -1,5 +1,5 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import './ConfirmationPage.css';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import '../styles/ConfirmationPage.css';
 
 function ConfirmationPage() {
   const location = useLocation();
@@ -47,14 +47,21 @@ function ConfirmationPage() {
           <span className="detail-value">{new Date(customer.createdAt).toLocaleString()}</span>
         </div>
 
-        <div className="confirmation-actions">
-          <button className="submit-button" onClick={() => navigate('/AccountPage')}>
-                View Dashboard
-          </button>
-          <button className="secondary-button" onClick={() =>window.print()}>
-                Print
-          </button>
-        </div>
+        
+<div className="confirmation-actions">
+  <button className="submit-button" onClick={() => window.print()}>
+    Print
+  </button>
+  <Link to={`/customers/${customer.customerId}/accounts/new`} className="submit-button">
+    Open Account
+  </Link>
+  <button className="secondary-button" onClick={() => navigate('/customers')}>
+    Register Another
+  </button>
+</div>
+         {/* <Link to={`/customers/${customer.customerId}/accounts/new`} className="submit-button">
+  Open Account for This Customer
+</Link>  */}
       </div>
     </div>
   );
