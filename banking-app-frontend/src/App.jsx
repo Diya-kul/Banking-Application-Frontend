@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectRoute';
 import DashboardPage from './pages/DashboardPage';
 import SetPasswordPage from './pages/SetPasswordPage';
+import TransactionPage from './pages/TransactionPage';
 
 function App() {
   return (
@@ -28,7 +29,20 @@ function App() {
   <ProtectedRoute><DashboardPage /></ProtectedRoute>
 } />
 <Route path="/set-password" element={<SetPasswordPage />} />
+    <Route path="/accounts/deposit" element={
+  <ProtectedRoute><TransactionPage mode="deposit" /></ProtectedRoute>
+} />
+<Route path="/accounts/withdraw" element={
+  <ProtectedRoute><TransactionPage mode="withdraw" /></ProtectedRoute>
+} />
+
+
+
+
+
+
     </Routes>
+    
   );
 }
 
