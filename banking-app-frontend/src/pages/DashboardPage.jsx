@@ -45,10 +45,10 @@ function DashboardPage() {
       </header>
 
       <section className="dashboard-actions">
-        <Link to="/customers" className="action-card">
+        <Link to="/accounts" className="action-card">
           <span className="action-icon">＋</span>
-          <span className="action-label">Register Customer</span>
-          <span className="action-desc">Open a new customer profile</span>
+          <span className="action-label">Create new account</span>
+          <span className="action-desc">Open a new account</span>
         </Link>
         <Link to="/accounts/deposit" className="action-card">
           <span className="action-icon">↓</span>
