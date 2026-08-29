@@ -1,20 +1,38 @@
+import '../styles/DashboardPage.css';
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { decodeToken } from '../utils/jwtHelper';
-import { getCustomerById } from '../api/customerApi';
+import { getCurrentCustomer } from '../api/customerApi';
 import { getAccountById } from '../api/accountApi';
-import '../styles/DashboardPage.css';
 
 function DashboardPage() {
   const { token, logout } = useAuth();
   const decoded = decodeToken(token);
 
+  const [currentCustomer, setCurrentCustomer] = useState(null);
+  const [loadingCustomer, setLoadingCustomer] = useState(true);
+  const [customerError, setCustomerError] = useState('');
+
   const [lookupId, setLookupId] = useState('');
-  const [lookupType, setLookupType] = useState('customer');
   const [lookupResult, setLookupResult] = useState(null);
   const [lookupError, setLookupError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchCurrentCustomer = async () => {
+      try {
+        const data = await getCurrentCustomer();
+        setCurrentCustomer(data);
+      } catch (error) {
+        setCustomerError('Could not load your profile.');
+      } finally {
+        setLoadingCustomer(false);
+      }
+    };
+    fetchCurrentCustomer();
+  }, []);
 
   const handleLookup = async (e) => {
     e.preventDefault();
@@ -23,12 +41,10 @@ function DashboardPage() {
     setLookupResult(null);
 
     try {
-      const data = lookupType === 'customer'
-        ? await getCustomerById(lookupId)
-        : await getAccountById(lookupId);
-      setLookupResult({ type: lookupType, data });
+      const data = await getAccountById(lookupId);
+      setLookupResult(data);
     } catch (error) {
-      setLookupError(`No ${lookupType} found with that ID.`);
+      setLookupError('No account found with that ID.');
     } finally {
       setLoading(false);
     }
@@ -45,22 +61,33 @@ function DashboardPage() {
       </header>
 
       <section className="dashboard-actions">
-        <Link to="/accounts" className="action-card">
-          <span className="action-icon">＋</span>
-          <span className="action-label">Create new account</span>
-          <span className="action-desc">Open a new account</span>
-        </Link>
-        <Link to="/accounts/deposit" className="action-card">
+        {loadingCustomer ? (
+          <div className="action-card">
+            <span className="action-desc">Loading your account...</span>
+          </div>
+        ) : customerError ? (
+          <div className="action-card">
+            <span className="action-desc general-error">{customerError}</span>
+          </div>
+        ) : (
+          <Link to={`/customers/${currentCustomer.customerId}/accounts/new`} className="action-card register">
+            <span className="action-icon">＋</span>
+            <span className="action-label">Open Account</span>
+            <span className="action-desc">For {currentCustomer.name}</span>
+          </Link>
+        )}
+
+        <Link to="/accounts/deposit" className="action-card deposit">
           <span className="action-icon">↓</span>
           <span className="action-label">Deposit</span>
           <span className="action-desc">Add funds to an account</span>
         </Link>
-        <Link to="/accounts/withdraw" className="action-card">
+        <Link to="/accounts/withdraw" className="action-card withdraw">
           <span className="action-icon">↑</span>
           <span className="action-label">Withdraw</span>
           <span className="action-desc">Take funds from an account</span>
         </Link>
-        <Link to="/accounts/transfer" className="action-card">
+        <Link to="/accounts/transfer" className="action-card transfer">
           <span className="action-icon">⇄</span>
           <span className="action-label">Transfer</span>
           <span className="action-desc">Move funds between accounts</span>
@@ -68,25 +95,15 @@ function DashboardPage() {
       </section>
 
       <section className="lookup-section">
-        <h2 className="section-title">Look up a record</h2>
-        <p className="section-subtitle">
-          Enter a customer or account ID to view details
-        </p>
+        <h2 className="section-title">Look up an account</h2>
+        <p className="section-subtitle">Search by account ID to view balance and status</p>
 
         <form className="lookup-form" onSubmit={handleLookup}>
-          <select
-            value={lookupType}
-            onChange={(e) => setLookupType(e.target.value)}
-            className="lookup-select"
-          >
-            <option value="customer">Customer ID</option>
-            <option value="account">Account ID</option>
-          </select>
           <input
             className="lookup-input"
             value={lookupId}
             onChange={(e) => setLookupId(e.target.value)}
-            placeholder="e.g. 19"
+            placeholder="Account ID, e.g. 5"
           />
           <button type="submit" className="lookup-button" disabled={loading || !lookupId}>
             {loading ? 'Searching...' : 'Search'}
@@ -95,42 +112,19 @@ function DashboardPage() {
 
         {lookupError && <p className="general-error">{lookupError}</p>}
 
-        {lookupResult?.type === 'customer' && (
-          <div className="result-card">
-            <div className="detail-row">
-              <span className="detail-label">Customer ID</span>
-              <span className="detail-value">{lookupResult.data.customerId}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Name</span>
-              <span className="detail-value">{lookupResult.data.name}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Email</span>
-              <span className="detail-value">{lookupResult.data.email}</span>
-            </div>
-            <Link
-              to={`/customers/${lookupResult.data.customerId}/accounts/new`}
-              className="submit-button result-action"
-            >
-              Open Account for This Customer
-            </Link>
-          </div>
-        )}
-
-        {lookupResult?.type === 'account' && (
+        {lookupResult && (
           <div className="result-card">
             <div className="detail-row">
               <span className="detail-label">Account No</span>
-              <span className="detail-value mono">{lookupResult.data.accountNo}</span>
+              <span className="detail-value mono">{lookupResult.accountNo}</span>
             </div>
             <div className="detail-row">
               <span className="detail-label">Balance</span>
-              <span className="detail-value mono balance">₹{Number(lookupResult.data.balance).toLocaleString('en-IN')}</span>
+              <span className="detail-value mono balance">₹{Number(lookupResult.balance).toLocaleString('en-IN')}</span>
             </div>
             <div className="detail-row">
               <span className="detail-label">Status</span>
-              <span className="detail-value">{lookupResult.data.accountStatus}</span>
+              <span className="detail-value">{lookupResult.accountStatus}</span>
             </div>
           </div>
         )}

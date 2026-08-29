@@ -49,7 +49,9 @@ function AccountPage() {
     setGeneralError('');
 
     try {
-      const payload = { ...formData, balance: parseFloat(formData.balance) };
+      const balanceValue = formData.balance ? parseFloat(formData.balance) : 0;
+  const payload = { ...formData, balance: balanceValue };
+
       const response = await createAccount(customerId, payload);
       navigate('/customers/confirmation', { state: response });
     } catch (error) {

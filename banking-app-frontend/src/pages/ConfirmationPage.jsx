@@ -1,7 +1,31 @@
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import '../styles/ConfirmationPage.css';
+
+import { useLocation, useNavigate } from 'react-router-dom';
+import RegistrationSummary from '../components/RegistrationSummary';
+import AccountSummary from '../components/AccountSummary';
+import TransactionSummary from '../components/TransactionSummary';
 import '../styles/shared.css';
 
+
+import '../styles/ConfirmationPage.css';
+
+
+const CONFIRMATION_CONFIG = {
+  registration: {
+    title: 'Registration Successful',
+    subtitle: "You're all set. Please log in to continue.",
+    Summary: RegistrationSummary,
+  },
+  account: {
+    title: 'Account Opened Successfully',
+    subtitle: 'The new account has been created',
+    Summary: AccountSummary,
+  },
+  transaction: {
+    title: 'Transaction Successful',
+    subtitle: 'Your transaction has been completed',
+    Summary: TransactionSummary,
+  },
+};
 
 function ConfirmationPage() {
   const location = useLocation();
@@ -12,67 +36,32 @@ function ConfirmationPage() {
     return (
       <div className="page-container">
         <div className="form-card">
-          <p>No registration data found.</p>
-          <button className="submit-button" onClick={() => navigate('/customers')}>
-            Go to Registration
+          <p>No confirmation data found.</p>
+          <button className="submit-button" onClick={() => navigate('/dashboard')}>
+            Go to Dashboard
           </button>
         </div>
       </div>
     );
   }
 
-  const isRegistrationFlow = data.flowType === 'registration';
+  const config = CONFIRMATION_CONFIG[data.flowType] || CONFIRMATION_CONFIG.account;
+  const { title, subtitle, Summary } = config;
 
   return (
     <div className="page-container">
       <div className="confirmation-card">
         <div className="success-icon">✓</div>
-        <h1 className="confirmation-title">
-          {isRegistrationFlow ? 'Registration Successful' : 'Account Opened Successfully'}
-        </h1>
-        <p className="confirmation-subtitle">
-          {isRegistrationFlow
-            ? "You're all set. Please log in to continue."
-            : 'The new account has been created'}
-        </p>
+        <h1 className="confirmation-title">{data.actionLabel ? `${data.actionLabel} Successful` : title}</h1>
+        <p className="confirmation-subtitle">{subtitle}</p>
 
-        {isRegistrationFlow ? (
-          <>
-            <div className="detail-row">
-              <span className="detail-label">Customer ID</span>
-              <span className="detail-value">{data.customerId}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Name</span>
-              <span className="detail-value">{data.name}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Email</span>
-              <span className="detail-value">{data.email}</span>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="detail-row">
-              <span className="detail-label">Account Number</span>
-              <span className="detail-value">{data.accountNo}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">IFSC Code</span>
-              <span className="detail-value">{data.ifscCode}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Balance</span>
-              <span className="detail-value">₹{data.balance}</span>
-            </div>
-          </>
-        )}
+        <Summary data={data} />
 
         <div className="confirmation-actions">
           <button className="submit-button" onClick={() => window.print()}>
             Print
           </button>
-          {isRegistrationFlow ? (
+          {data.flowType === 'registration' ? (
             <button className="secondary-button" onClick={() => navigate('/login')}>
               Continue to Login
             </button>
