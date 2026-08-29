@@ -12,6 +12,7 @@ function TransactionPage({ mode }) {
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [generalError, setGeneralError] = useState('');
+  const [isConflict, setIsConflict] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,9 +29,13 @@ function TransactionPage({ mode }) {
     } catch (error) {
       if (error.response?.data?.fieldErrors) {
         setFieldErrors(error.response.data.fieldErrors);
-      } else if (error.response) {
-        setGeneralError(error.response.data.message || `Failed to ${mode}.`);
-      } else {
+      }else if (error.response?.status === 409) {
+  setGeneralError('This account was just updated by another transaction. Please review your balance and try again.');
+} else if (error.response) {
+  setGeneralError(error.response.data.message || 'Failed to process request.');
+  setIsConflict(error.response.status === 409);
+}
+       else {
         setGeneralError('Could not reach the server. Please try again.');
       }
     } finally {
@@ -69,7 +74,16 @@ function TransactionPage({ mode }) {
             {loading ? 'Processing...' : isDeposit ? 'Deposit' : 'Withdraw'}
           </button>
 
-          {generalError && <p className="general-error">{generalError}</p>}
+          {generalError && (
+  <div className="general-error">
+    <p>{generalError}</p>
+    {isConflict && (
+      <button type="button" className="secondary-button" onClick={handleSubmit}>
+        Retry
+      </button>
+    )}
+  </div>
+)}
         </form>
       </div>
     </div>
