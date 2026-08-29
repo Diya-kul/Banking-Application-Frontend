@@ -22,8 +22,8 @@ function TransferPage() {
     try {
       const response = await transfer(fromAccountId, toAccountId, parseFloat(amount));
       navigate('/customers/confirmation', {
-        state: { ...response.fromAccount, flowType: 'account', actionLabel: 'Transfer' },
-      });
+  state: { ...response.fromAccount, flowType: 'transaction', actionLabel: 'Transfer' },
+});
     } catch (error) {
       if (error.response?.data?.fieldErrors) {
         setFieldErrors(error.response.data.fieldErrors);

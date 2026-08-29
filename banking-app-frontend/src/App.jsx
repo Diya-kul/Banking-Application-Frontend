@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectRoute';
 import DashboardPage from './pages/DashboardPage';
 import SetPasswordPage from './pages/SetPasswordPage';
 import TransactionPage from './pages/TransactionPage';
+import TransferPage from './pages/TransferPage';
 
 function App() {
   return (
@@ -20,8 +21,8 @@ function App() {
         <ProtectedRoute><ConfirmationPage /></ProtectedRoute>
       } />
       <Route path="/accounts" element={
-        <ProtectedRoute><AccountPage /></ProtectedRoute>
-      } />
+  <ProtectedRoute><AccountPage /></ProtectedRoute>
+} />
       <Route path="/customers/:customerId/accounts/new" element={
         <ProtectedRoute><AccountPage /></ProtectedRoute>
       } />
@@ -36,7 +37,9 @@ function App() {
   <ProtectedRoute><TransactionPage mode="withdraw" /></ProtectedRoute>
 } />
 
-
+<Route path="/accounts/transfer" element={
+  <ProtectedRoute><TransferPage /></ProtectedRoute>
+} />
 
 
 

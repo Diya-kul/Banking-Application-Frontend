@@ -1,11 +1,9 @@
-import '../styles/DashboardPage.css';
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { decodeToken } from '../utils/jwtHelper';
 import { getCurrentCustomer } from '../api/customerApi';
-import { getAccountById } from '../api/accountApi';
+import '../styles/DashboardPage.css';
 
 function DashboardPage() {
   const { token, logout } = useAuth();
@@ -14,11 +12,6 @@ function DashboardPage() {
   const [currentCustomer, setCurrentCustomer] = useState(null);
   const [loadingCustomer, setLoadingCustomer] = useState(true);
   const [customerError, setCustomerError] = useState('');
-
-  const [lookupId, setLookupId] = useState('');
-  const [lookupResult, setLookupResult] = useState(null);
-  const [lookupError, setLookupError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCurrentCustomer = async () => {
@@ -33,22 +26,6 @@ function DashboardPage() {
     };
     fetchCurrentCustomer();
   }, []);
-
-  const handleLookup = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setLookupError('');
-    setLookupResult(null);
-
-    try {
-      const data = await getAccountById(lookupId);
-      setLookupResult(data);
-    } catch (error) {
-      setLookupError('No account found with that ID.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="dashboard">
@@ -92,42 +69,6 @@ function DashboardPage() {
           <span className="action-label">Transfer</span>
           <span className="action-desc">Move funds between accounts</span>
         </Link>
-      </section>
-
-      <section className="lookup-section">
-        <h2 className="section-title">Look up an account</h2>
-        <p className="section-subtitle">Search by account ID to view balance and status</p>
-
-        <form className="lookup-form" onSubmit={handleLookup}>
-          <input
-            className="lookup-input"
-            value={lookupId}
-            onChange={(e) => setLookupId(e.target.value)}
-            placeholder="Account ID, e.g. 5"
-          />
-          <button type="submit" className="lookup-button" disabled={loading || !lookupId}>
-            {loading ? 'Searching...' : 'Search'}
-          </button>
-        </form>
-
-        {lookupError && <p className="general-error">{lookupError}</p>}
-
-        {lookupResult && (
-          <div className="result-card">
-            <div className="detail-row">
-              <span className="detail-label">Account No</span>
-              <span className="detail-value mono">{lookupResult.accountNo}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Balance</span>
-              <span className="detail-value mono balance">₹{Number(lookupResult.balance).toLocaleString('en-IN')}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Status</span>
-              <span className="detail-value">{lookupResult.accountStatus}</span>
-            </div>
-          </div>
-        )}
       </section>
     </div>
   );
