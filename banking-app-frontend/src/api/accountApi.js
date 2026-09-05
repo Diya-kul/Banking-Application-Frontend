@@ -24,3 +24,8 @@ export const transfer = async (accountId, toAccountId, amount) => {
   const response = await axiosInstance.post(`/accounts/${accountId}/transfer`, { toAccountId, amount });
   return response.data;
 };
+
+export const getAccountsByCustomer = async (customerId) => {
+  const response = await axiosInstance.get(`/customers/${customerId}/accounts`);
+  return response.data;
+};
