@@ -111,6 +111,7 @@ function DashboardPage() {
                   to={`/customers/${currentCustomer.customerId}/accounts/new`}
                   className="submit-button dash-card-action"
                 >
+            
                   Open an Account
                 </Link>
               </>
@@ -145,6 +146,7 @@ function DashboardPage() {
                 {accounts.map((acc) => (
                   <div key={acc.accountId} className="dash-account-item">
                     <div>
+                      <span className="dash-account-id">ACCOUNT ID: {acc.accountId} </span>
                       <span className="dash-account-no">{acc.accountNo}</span>
                       <span className="dash-account-meta">{acc.branch}, {acc.city} · {acc.accountStatus}</span>
                     </div>

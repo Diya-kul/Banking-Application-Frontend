@@ -95,7 +95,7 @@ a.dash-nav-item:hover {
 .dash-main {
   flex: 1;
   padding: 40px 48px;
-  max-width: 900px;
+  max-width: 100%;
 }
 
 .dash-topbar {
@@ -266,6 +266,14 @@ a.dash-nav-item:hover {
   border-radius: 8px;
 }
 
+.dash-account-id {
+  display: block;
+  color: #0F172A;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
 .dash-account-no {
   display: block;
   color: #0F172A;
@@ -273,6 +281,8 @@ a.dash-nav-item:hover {
   font-weight: 700;
   font-family: 'SF Mono', 'Consolas', monospace;
 }
+
+
 
 .dash-account-meta {
   display: block;
