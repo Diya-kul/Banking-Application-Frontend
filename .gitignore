@@ -1,0 +1,11 @@
+# Ignore everything
+*
+
+# But keep this folder
+!banking-app-frontend/
+
+# Also keep .gitignore itself
+!.gitignore
+
+# Keep the README.md file
+!README.md
